@@ -52,5 +52,7 @@ and then open index.html in your browser.
 **Additional Resources**
 
 * [Foursquare API](https://developer.foursquare.com/start)
+* [To Do MVC Examples - Including KnockoutJS](http://todomvc.com/)
+* [Utility Functions in KnockoutJS](http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html)
 * [Udacity Style
   Guide](http://udacity.github.io/frontend-nanodegree-styleguide/javascript.html)
