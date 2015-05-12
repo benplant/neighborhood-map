@@ -1,0 +1,41 @@
+{
+  "name": "neighborhood-map",
+  "version": "1.0.0",
+  "description": "Udacity Front-End Nanodegree Project 5 - Neighborhood Map",
+  "main": "scripts/app.js",
+  "dependencies": {
+    "browserify": "^10.1.3",
+    "del": "^1.1.1",
+    "gulp": "^3.8.11",
+    "gulp-concat": "^2.5.2",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-uglify": "^1.2.0",
+    "gulp-util": "^3.0.4",
+    "jquery": "^2.1.4",
+    "knockout": "^3.3.0",
+    "lodash": "^3.8.0",
+    "lodash.assign": "^3.1.0",
+    "uglifyify": "^3.0.1",
+    "underscore": "^1.8.3",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.2.1"
+  },
+  "devDependencies": {
+    "gulp-jshint": "^1.10.0",
+    "jshint-stylish": "^1.0.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benplant/neighborhood-map.git"
+  },
+  "author": "Ben Plantinga",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/benplant/neighborhood-map/issues"
+  },
+  "homepage": "https://github.com/benplant/neighborhood-map#readme"
+}

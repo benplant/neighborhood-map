@@ -3,7 +3,7 @@
 
     // Represent a single location
     var Location = function (title, lat, lng) {
-        this.title = title;;
+        this.title = title;
         this.lat = lat;
         this.lng = lng;
     };

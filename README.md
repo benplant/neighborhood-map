@@ -39,6 +39,9 @@ and then open index.html in your browser.
 
 ###Results:
 
+* I went with [Gulp](http://gulpjs.com/) for the build system on this project.  I have used [Grunt](http://gruntjs.com/) on other projects and wanted to diversify my experience.
+* I also tried out [Browserify](http://browserify.org/) to allow bundling dependencies in the browser using require('module') syntax.
+
 * ...
 * ...
 
@@ -51,8 +54,28 @@ and then open index.html in your browser.
 
 **Additional Resources**
 
+* [GulpJS](http://gulpjs.com/) -- Automate and enhance your workflow.
+* [GulpJS Recipes](https://github.com/gulpjs/gulp/tree/master/docs/recipes) -- Examples recipes for using Gulp.
+* [Gulp Delete](https://github.com/gulpjs/gulp/blob/master/docs/recipes/delete-files-folder.md) -- Delete files/folders with Gulp.
+* [Gulp Util](https://github.com/gulpjs/gulp-util) -- Utilities for gulp plugins.
+* [Gulp Source Maps](https://www.npmjs.com/package/gulp-sourcemaps) -- Source map support for Gulp.js.
+* [vinyl-source-stream](https://github.com/hughsk/vinyl-source-stream) -- Use conventional text streams at the start of your gulp pipeline.
+* [vinyl-buffer](https://www.npmjs.com/package/vinyl-buffer) -- Convert streaming vinyl files to use buffers.
+* [Gulp JSHint](https://www.npmjs.com/package/gulp-jshint) -- JSHint plugin for gulp
+
+* [Browserify](http://browserify.org/) -- Browserify lets you require('modules') in the browser by bundling up all of your dependencies.
+* [uglifyify](https://github.com/hughsk/uglifyify) -- A browserify transform which minifies your code using UglifyJS2.
+* [watchify](https://github.com/substack/watchify) -- Watch mode for browserify builds.
+
+* [KnockoutJS](http://knockoutjs.com/) -- Simplify dynamic JavaScript UIs with the Model-View-View Model (MVVM).
 * [Foursquare API](https://developer.foursquare.com/start)
 * [To Do MVC Examples - Including KnockoutJS](http://todomvc.com/)
 * [Utility Functions in KnockoutJS](http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html)
 * [Udacity Style
   Guide](http://udacity.github.io/frontend-nanodegree-styleguide/javascript.html)
+
+** Researched, but did not use
+
+* [gulp-concat](https://www.npmjs.com/package/gulp-concat) -- Concatenates files with Gulp.
+* [gulp-uglify](https://www.npmjs.com/package/gulp-uglify/) -- Minify files with UglifyJS and Gulp.
+* [RequireJS](http://requirejs.org/) -- JavaScript file and module loader.
