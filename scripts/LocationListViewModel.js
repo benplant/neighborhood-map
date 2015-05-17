@@ -2,14 +2,30 @@
     'use strict';
 
     // Represent a single location
-    var Location = function (title, category, lat, lng) {
+    var Location = function (title, category, info, lat, lng) {
         var self = this;
         self.title = title;
         self.category = category;
+        self.info = info;
         self.lat = lat;
         self.lng = lng;
         self.log = function() {
             console.log(self);
+        }
+
+        self.addToMap = function(googleMap) {
+            // Create a marker
+            self.marker = new google.maps.Marker({
+                position: new google.maps.LatLng(self.lat,self.lng),
+                map: googleMap,
+                title: self.title
+            });
+
+            var infowindow = new google.maps.InfoWindow({ content: self.info});
+
+            google.maps.event.addListener(self.marker, 'click', function() {
+                infowindow.open(googleMap, self.marker);
+            });
         }
     };
 
@@ -18,6 +34,8 @@
     // The Location List ViewModel
     var LocationListViewModel = function (locationModel) {
         var self = this;
+
+        self.map = initializeMap();
 
         // Observable Array of Locations
         self.locations = ko.observableArray([]);
@@ -42,33 +60,8 @@
                 center: {lat: 49.2739952, lng: -123.1403072},
                 zoom: 14
             };
-            var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-
-            var marker = new google.maps.Marker({
-                position: new google.maps.LatLng(49.2739952,-123.1403072),
-                map: map,
-                title: 'Hello World!'
-            });
-
-            var contentString = '<div id="content">'+
-                '<div id="siteNotice">Site Notice'+
-                '</div>'+
-                '<h1 id="firstHeading" class="firstHeading">First Heading</h1>'+
-                '<div id="bodyContent">'+
-                '<p>body content</p>'+
-                '</div>'+
-                '</div>';
-
-            var infowindow = new google.maps.InfoWindow({
-                content: contentString
-            });
-
-            google.maps.event.addListener(marker, 'click', function() {
-                infowindow.open(map, marker);
-            });
+            return new google.maps.Map(document.getElementById('map'), mapOptions);
         }
-
-        initializeMap();
 
         // Load example data from FourSquare
         function loadFourSquareData() {
@@ -81,15 +74,29 @@
                 var places = data.response.groups[0].items;
                 for (var i = 0; i < places.length; i++) {
                     console.log(places[i].venue);
-                    self.locations.push(createLocation(places[i].venue));
+                    var location = createLocation(places[i].venue);
+                    console.log(location);
+                    location.addToMap(self.map);
+                    self.locations.push(location);
                 }
-
-
             });
         }
 
         function createLocation(locationData) {
-            return new Location(locationData.name, locationData.categories[0].name, locationData.location.lat, locationData.location.lng);
+            var name = locationData.name;
+            var category = locationData.categories[0].name;
+            var info = '<div id="content">'+
+                '<div id="siteNotice">'+category+
+                '</div>'+
+                '<h1 id="firstHeading" class="firstHeading">' + name + '</h1>'+
+                '<div id="bodyContent">'+
+                '<p>other stuff</p>'+
+                '</div>'+
+                '</div>';
+            var lat = locationData.location.lat;
+            var lng = locationData.location.lng;
+
+            return new Location(name, category, info, lat, lng);
         }
 
         loadFourSquareData();
