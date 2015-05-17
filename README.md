@@ -54,6 +54,8 @@ and then open index.html in your browser.
 
 **Additional Resources**
 
+* [Google Maps API Reference](https://developers.google.com/maps/documentation/javascript/reference) -- Google Maps JavaScript API Reference.
+
 * [GulpJS](http://gulpjs.com/) -- Automate and enhance your workflow.
 * [GulpJS Recipes](https://github.com/gulpjs/gulp/tree/master/docs/recipes) -- Examples recipes for using Gulp.
 * [Gulp Delete](https://github.com/gulpjs/gulp/blob/master/docs/recipes/delete-files-folder.md) -- Delete files/folders with Gulp.
@@ -71,10 +73,9 @@ and then open index.html in your browser.
 * [Foursquare API](https://developer.foursquare.com/start)
 * [To Do MVC Examples - Including KnockoutJS](http://todomvc.com/)
 * [Utility Functions in KnockoutJS](http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html)
-* [Udacity Style
-  Guide](http://udacity.github.io/frontend-nanodegree-styleguide/javascript.html)
+* [Udacity Style Guide](http://udacity.github.io/frontend-nanodegree-styleguide/javascript.html)
 
-** Researched, but did not use
+**Researched, but did not use**
 
 * [gulp-concat](https://www.npmjs.com/package/gulp-concat) -- Concatenates files with Gulp.
 * [gulp-uglify](https://www.npmjs.com/package/gulp-uglify/) -- Minify files with UglifyJS and Gulp.
