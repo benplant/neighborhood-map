@@ -63,6 +63,7 @@ and then open index.html in your browser.
 * [To Do MVC Examples - Including KnockoutJS](http://todomvc.com/)
 * [Utility Functions in KnockoutJS](http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html)
 * [Udacity Style Guide](http://udacity.github.io/frontend-nanodegree-styleguide/javascript.html)
+* [Have Google Map div take 100% of viewport](http://www.tutorialrepublic.com/faq/how-to-set-a-div-height-to-100-percent-using-css.php)
 
 **Researched, but did not use**
 

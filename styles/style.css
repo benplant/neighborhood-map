@@ -1,11 +1,19 @@
-#location-list {
+/*#location-list {
     height = 300px;
     margin: 0;
     padding: 0;
 }
+*/
+/* Need 100% for parents to have map fill the screen */
+/* http://www.tutorialrepublic.com/faq/how-to-set-a-div-height-to-100-percent-using-css.php */
+body, html {
+    height: 100%;
+    width: 100%;
+}
 
 #map {
-    height: 400px;
+    height: 100%;
+    width: 100%;
     margin: 0;
     padding: 0;
 }

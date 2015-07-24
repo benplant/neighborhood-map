@@ -23,54 +23,50 @@
 
 
 <body>
-<div class="container">
+    <div id="map"></div>
 
-    <header id="header">
-        <h1>Locations</h1>
-        <form data-bind="submit: filter">
-            Filter locations: <input id="location-filter" data-bind="value: currentFilter" placeholder="Coffee" autofocus/>
-            <button type="submit">Go</button>
-        </form>
-    </header>
+    <div class="container">
 
-    <div class="row">
-        <div class="col-md-6" id="">
-            <section id="main">
-                <div class="selectedCategories" data-bind="foreach: selectedCategories">
-                    <input id="test" type="checkbox" data-bind="checked: isSelected" />
-                    <label for="test" data-bind="text: categoryName"></label>
-                </div>
+        <header id="header">
+            <h1>Locations</h1>
+            <form data-bind="submit: filter">
+                Filter locations: <input id="location-filter" data-bind="value: currentFilter" placeholder="Coffee" autofocus/>
+                <button type="submit">Go</button>
+            </form>
+        </header>
 
-                <ul id="location-list" data-bind="foreach: filteredLocations, visible: locations().length">
-                    <li>
-                        <div class="view">
-                            <label data-bind="text: title"></label>
-                            <span data-bind="text: category"></span>
-                            <span data-bind="text: lat"></span>
-                            <span data-bind="text: lng"></span>
-                        </div>
-                    </li>
-                </ul>
-            </section>
+        <div class="row">
+            <div class="col-md-6" id="">
+                <section id="main">
+                    <div class="selectedCategories" data-bind="foreach: categories">
+                        <input id="test" type="checkbox" data-bind="checked: isSelected" />
+                        <label for="test" data-bind="text: pluralName"></label>
+                    </div>
 
-        </div>
-
-        <div class="col-md-6" id="map">
-
+                    <ul id="location-list" data-bind="foreach: filteredLocations, visible: locations().length">
+                        <li>
+                            <div class="view">
+                                <label data-bind="text: title"></label>
+                                <span data-bind="text: category"></span>
+                                <span data-bind="text: lat"></span>
+                                <span data-bind="text: lng"></span>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+            </div>
         </div>
     </div>
-</div>
 
-<!--script src='scripts/bundle.js'></script -->
+    <!--script src='scripts/bundle.js'></script -->
+    <script src='bower_components/jquery/dist/jquery.js'></script>
+    <script src='bower_components/bootstrap/dist/js/bootstrap.js'></script>
+    <script src='bower_components/knockout/dist/knockout.js'></script>
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgZ0_B60S4G1rwoiN2FbDVFiBwaLLrOx4">
+    </script>
 
-<script src='bower_components/jquery/dist/jquery.js'></script>
-<script src='bower_components/bootstrap/dist/js/bootstrap.js'></script>
-<script src='bower_components/knockout/dist/knockout.js'></script>
-<script type="text/javascript"
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgZ0_B60S4G1rwoiN2FbDVFiBwaLLrOx4">
-</script>
-<script src='scripts/LocationListViewModel.js'></script>
-
+    <script src='scripts/LocationListViewModel.js'></script>
 
 </body>
 </html>
