@@ -59,16 +59,25 @@
         */
 
         function initializeMap() {
-            var mapOptions = {
-                center: {lat: 49.2739952, lng: -123.1403072},
-                zoom: 14,
-                // Disable Google controls/UI
-                disableDefaultUI: true
-            };
-            var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-            // Fix map height
-            // document.getElementById('map').height($(window).height());
-            return map;
+            // Uses global google variable
+            // If internet is not connected, google is not defined.
+            if (typeof google === 'undefined') {
+                console.log("No google variable");
+                return null;
+            } else {
+                var mapOptions = {
+                    center: {lat: 49.2739952, lng: -123.1403072},
+                    zoom: 14,
+                    // Disable Google controls/UI
+                    disableDefaultUI: true
+                };
+                var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+                // Fix map height
+                // document.getElementById('map').height($(window).height());
+                // Not necessary --> set parent elements of #map (body and html) to
+                // 100% height and width in CSS to solve the issue.
+                return map;
+            }
         }
 
         function addCategory(name, pluralName) {
@@ -100,7 +109,13 @@
                     location.addToMap(self.map);
                     self.locations.push(location);
                 }
+            }).fail(function() {
+                console.log("Unable to complete FourSquare request");
             });
+
+                //done(function() { alert('getJSON request succeeded!'); })
+                //.fail(function() { alert('getJSON request failed! '); })
+                //.always(function() { alert('getJSON request ended!'); });
         }
 
         function createLocation(locationData) {
