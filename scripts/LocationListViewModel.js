@@ -32,8 +32,10 @@
     // The Location List ViewModel
     var LocationListViewModel = function (locationModel) {
         var self = this;
+        self.mapCenter = {lat: 49.2739952, lng: -123.1403072};
 
         self.map = initializeMap();
+
 
         // Observable Array of Locations
         self.locations = ko.observableArray([]);
@@ -66,7 +68,7 @@
                 return null;
             } else {
                 var mapOptions = {
-                    center: {lat: 49.2739952, lng: -123.1403072},
+                    center: self.mapCenter,
                     zoom: 14,
                     // Disable Google controls/UI
                     disableDefaultUI: true
@@ -100,12 +102,12 @@
             var queryURL = 'https://api.foursquare.com/v2/venues/explore?ll=49.2739952,-123.1403072&limit=30&oauth_token=XWDKSEKZ0FTNFJMOJ1SA5MSSA1HZVCMPTTZ5DYJUX0YFI3K4&v=20150509';
 
             $.getJSON(queryURL, function(data) {
-                console.log(data);
+                //console.log(data);
                 var places = data.response.groups[0].items;
                 for (var i = 0; i < places.length; i++) {
-                    console.log(places[i].venue);
+                    //console.log(places[i].venue);
                     var location = createLocation(places[i].venue);
-                    console.log(location);
+                    //console.log(location);
                     location.addToMap(self.map);
                     self.locations.push(location);
                 }
@@ -147,7 +149,7 @@
         //    return new Location(location.title, location.lat, location.lng);
         //}));
 
-        console.log("Mapped locations: " + self.locations());
+        //console.log("Mapped locations: " + self.locations());
 
         // Store the current search filter entered by the user
         self.currentFilter = ko.observable();
@@ -167,10 +169,12 @@
             self.currentFilter();
         };
 
-        // Console Log the JSON form of the ViewModel
-        //console.log(ko.toJSON(self));
-
-
+        // Center and resize map when window resized
+        window.addEventListener('resize', function() {
+            console.log('addEventListener - resize');
+            self.map.setCenter(self.mapCenter);
+            google.maps.event.trigger(map, "resize");
+        });
 
     };
 
