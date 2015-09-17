@@ -169,6 +169,10 @@
             self.currentFilter();
         };
 
+        self.searchResultsClicked = function(location) {
+            console.log(location);
+        };
+
         // Center and resize map when window resized
         window.addEventListener('resize', function() {
             console.log('addEventListener - resize');
