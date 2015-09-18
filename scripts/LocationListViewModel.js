@@ -16,7 +16,7 @@
         self.addToMap = function(googleMap) {
             // Create a marker
             self.marker = new google.maps.Marker({
-                position: new google.maps.LatLng(self.lat,self.lng),
+                position: {lat: self.lat, lng: self.lng},
                 map: googleMap,
                 title: self.title
             });
@@ -26,6 +26,13 @@
             google.maps.event.addListener(self.marker, 'click', function() {
                 self.marker.map.panTo(self.marker.position);
                 infowindow.open(googleMap, self.marker);
+
+                // Add a brief bounce animation
+                self.marker.setAnimation(google.maps.Animation.BOUNCE);
+                window.setTimeout(function() {
+                    // Stop bounce animation
+                    self.marker.setAnimation(null);
+                }, 1440);
             });
 
             self.clicked = function() {
@@ -33,8 +40,8 @@
             };
 
             self.hide = function() {
-                // https://developers.google.com/maps/documentation/javascript/examples/marker-remove
                 // Remove this marker from the map
+                // https://developers.google.com/maps/documentation/javascript/examples/marker-remove
                 self.marker.setMap(null);
             };
 
@@ -47,33 +54,11 @@
     // The Location List ViewModel
     var LocationListViewModel = function (locationModel) {
         var self = this;
+
         self.mapCenter = {lat: 49.2739952, lng: -123.1403072};
-
         self.map = initializeMap();
-
-
-        // Observable Array of Locations
         self.locations = ko.observableArray([]);
-
-        // Location Categories
         self.categories = ko.observableArray([]);
-
-        // Location Categories
-        /*
-        self.categories = [
-            { categoryName: "Coffee Shops" },
-            { categoryName: "Restaurants" },
-            { categoryName: "Book Stores" },
-            { categoryName: "Parks" }
-        ];
-
-        self.selectedCategories = [
-            { categoryName: "Coffee Shops", isSelected: false },
-            { categoryName: "Restaurants", isSelected: false },
-            { categoryName: "Book Stores", isSelected: false },
-            { categoryName: "Parks", isSelected: false }
-        ];
-        */
 
         function initializeMap() {
             // Uses global google variable
@@ -88,12 +73,7 @@
                     // Disable Google controls/UI
                     disableDefaultUI: true
                 };
-                var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-                // Fix map height
-                // document.getElementById('map').height($(window).height());
-                // Not necessary --> set parent elements of #map (body and html) to
-                // 100% height and width in CSS to solve the issue.
-                return map;
+                return new google.maps.Map(document.getElementById('map'), mapOptions);
             }
         }
 
@@ -129,18 +109,12 @@
             }).fail(function() {
                 console.log("Unable to complete FourSquare request");
             });
-
-                //done(function() { alert('getJSON request succeeded!'); })
-                //.fail(function() { alert('getJSON request failed! '); })
-                //.always(function() { alert('getJSON request ended!'); });
         }
 
         function createLocation(locationData) {
             var name = locationData.name;
             var category = locationData.categories[0].name;
-
             var phoneNumber = locationData.contact.formattedPhone;
-
             var info = '<div id="content">'+
                 '<div id="siteNotice">'+category+
                 '</div>'+
@@ -159,13 +133,6 @@
 
         loadFourSquareData();
 
-        // Array of passed in locations -- mapped to an observableArray of Location objects
-        //self.locations = ko.observableArray(locationModel.locations.map(function (location) {
-        //    return new Location(location.title, location.lat, location.lng);
-        //}));
-
-        //console.log("Mapped locations: " + self.locations());
-
         // Store the current search filter entered by the user
         self.currentFilter = ko.observable();
 
@@ -178,6 +145,7 @@
                 });
                 return self.locations();
             } else {
+                // Show filtered locations on map & hide others
                 return ko.utils.arrayFilter(self.locations(), function(location) {
                     if (location.title.toLowerCase().indexOf(self.currentFilter().toLowerCase()) > -1) {
                         location.show();
@@ -197,102 +165,17 @@
         self.searchResultsClicked = function(location) {
             console.log(location);
             location.clicked();
-
         };
 
         // Center and resize map when window resized
         window.addEventListener('resize', function() {
-            console.log('addEventListener - resize');
+            console.log('addEve ntListener - resize');
             self.map.setCenter(self.mapCenter);
             google.maps.event.trigger(map, "resize");
         });
-
     };
 
     // Bind an instance of our viewModel to the page
     var viewModel = new LocationListViewModel();
     ko.applyBindings(viewModel);
 }());
-
-
-//var queryYelp = function() {
-//
-//    var queryURL = "http://api.yelp.com/v2/search?location=Vancouver, BC&cc=CA&category_filter=gluten_free";
-//
-//
-//
-//    //$.getJSON(queryURL, function( data ) {
-//
-//
-//
-//    var auth = {
-//        consumerKey: "nfcsACjrebEVCPG64xgyXQ",
-//        consumerSecret: "Q9GiWQ6dAEv3eR2d02Hn6D_5Hyc",
-//        accessToken: "V2Sb2E5N8urFb0apHO2_XkFG20xvbLWb",
-//        // You wouldn't actually want to expose your access token secret like this in a real application.
-//        accessTokenSecret: "us5uLE1OJFKyGYzxstTPD4OpRuA",
-//        serviceProvider: {
-//            signatureMethod: "HMAC-SHA1"
-//        }
-//    };
-//
-//    var terms = 'food';
-//    var near = 'Vancouver, BC';
-//
-//    var accessor = {
-//        consumerSecret: auth.consumerSecret,
-//        tokenSecret: auth.accessTokenSecret
-//    };
-//
-//    parameters = [];
-//    parameters.push(['term', terms]);
-//    parameters.push(['location', near]);
-//    parameters.push(['callback', 'cb']);
-//    parameters.push(['oauth_consumer_key', auth.consumerKey]);
-//    parameters.push(['oauth_consumer_secret', auth.consumerSecret]);
-//    parameters.push(['oauth_token', auth.accessToken]);
-//    parameters.push(['oauth_signature_method', 'HMAC-SHA1']);
-//
-//    var message = {
-//        'action': 'http://api.yelp.com/v2/search',
-//        'method': 'GET',
-//        'parameters': parameters
-//    };
-//
-//    OAuth.setTimestampAndNonce(message);
-//    OAuth.SignatureMethod.sign(message, accessor);
-//
-//    var parameterMap = OAuth.getParameterMap(message.parameters);
-//    parameterMap.oauth_signature = OAuth.percentEncode(parameterMap.oauth_signature)
-//    console.log(parameterMap);
-//
-//    var bestRestaurant = "Some random restaurant";
-//
-//    $.ajax({
-//        'url': message.action,
-//        'data': parameterMap,
-//        'cache': true,
-//        'dataType': 'jsonp',
-//        'jsonpCallback': 'cb',
-//        'success': function (data, textStats, XMLHttpRequest) {
-//            console.log(data);
-//            var output = prettyPrint(data);
-//
-//            document.write("<h1>The 3 best restaurants are listed for the following city: </h1>");
-//            document.write("<h1>");
-//            document.write(near);
-//            document.write("<\h1>");
-//            var i;
-//            for (i = 0; i <= 10; i = i + 1) {
-//                document.write("<p>");
-//                document.write(data.businesses[i].name);
-//                document.write("   Rated   ");
-//                document.write(data.businesses[i].rating);
-//                document.write("      ");
-//                document.write(data.businesses[i].phone);
-//                document.write("<\p>");
-//            }
-//
-//        }
-//    });
-//};
