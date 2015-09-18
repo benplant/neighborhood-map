@@ -1,7 +1,7 @@
 neighborhood-map
 ================
 
-This is my version of a JavaScript Neighborhood Map for Project 6 of the [Udacity Front-End Web Developer Nanodegree] (https://www.udacity.com/course/nd001).
+This is my version of a JavaScript Neighborhood Map for Project 5 of the [Udacity Front-End Web Developer Nanodegree] (https://www.udacity.com/course/nd001).
 
 This project provided experience with ...
 
@@ -51,17 +51,16 @@ and then open index.html in your browser.
 * [JavaScript Design Patterns](https://www.udacity.com/course/ud989-nd)
 
 **Additional Resources**
-
 * [Google Maps API Reference](https://developers.google.com/maps/documentation/javascript/reference) -- Google Maps JavaScript API Reference.
+* [KnockoutJS](http://knockoutjs.com/) -- Simplify dynamic JavaScript UIs with the Model-View-View Model (MVVM).
+* [Utility Functions in KnockoutJS](http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html)
+* [Foursquare API](https://developer.foursquare.com/start)
 * [GulpJS](http://gulpjs.com/) -- Automate and enhance your workflow.
 * [GulpJS Recipes](https://github.com/gulpjs/gulp/tree/master/docs/recipes) -- Examples recipes for using Gulp.
 * [Gulp Delete](https://github.com/gulpjs/gulp/blob/master/docs/recipes/delete-files-folder.md) -- Delete files/folders with Gulp.
 * [Gulp Util](https://github.com/gulpjs/gulp-util) -- Utilities for gulp plugins.
 * [Gulp JSHint](https://www.npmjs.com/package/gulp-jshint) -- JSHint plugin for gulp
-* [KnockoutJS](http://knockoutjs.com/) -- Simplify dynamic JavaScript UIs with the Model-View-View Model (MVVM).
-* [Foursquare API](https://developer.foursquare.com/start)
 * [To Do MVC Examples - Including KnockoutJS](http://todomvc.com/)
-* [Utility Functions in KnockoutJS](http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html)
 * [Udacity Style Guide](http://udacity.github.io/frontend-nanodegree-styleguide/javascript.html)
 * [Have Google Map div take 100% of viewport](http://www.tutorialrepublic.com/faq/how-to-set-a-div-height-to-100-percent-using-css.php)
 * [Add/Remove Google Markers](https://developers.google.com/maps/documentation/javascript/examples/marker-remove)

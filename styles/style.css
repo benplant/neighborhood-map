@@ -81,3 +81,23 @@ body, html {
 #search-results-list {
     list-style-type: none;
 }
+
+#info-window {
+    margin: 0;
+    padding: 0;
+}
+
+#info-name {
+    font-weight: 700;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+}
+
+#info-category {
+
+}
+
+#info-body {
+    margin-top: 10px;
+}

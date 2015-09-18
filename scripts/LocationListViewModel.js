@@ -58,7 +58,10 @@
     var LocationListViewModel = function (locationModel) {
         var self = this;
 
-        self.mapCenter = {lat: 49.2739952, lng: -123.1403072};
+        var startingLat = 49.2739952;
+        var startingLng = -123.1403072;
+
+        self.mapCenter = {lat: startingLat, lng: startingLng};
         self.map = initializeMap();
         self.locations = ko.observableArray([]);
         self.categories = ko.observableArray([]);
@@ -99,15 +102,17 @@
         // Load data from FourSquare
         function loadFourSquareData() {
             // Return the top interesting results from FourSquare
-            var queryURL = 'https://api.foursquare.com/v2/venues/explore?ll=49.2739952,-123.1403072&limit=30&oauth_token=XWDKSEKZ0FTNFJMOJ1SA5MSSA1HZVCMPTTZ5DYJUX0YFI3K4&v=20150509';
+            var queryURL = 'https://api.foursquare.com/v2/venues/explore?ll=' +
+                startingLat + ',' +
+                startingLng +
+                '&limit=30' +
+                '&oauth_token=XWDKSEKZ0FTNFJMOJ1SA5MSSA1HZVCMPTTZ5DYJUX0YFI3K4&v=20150509';
 
             $.getJSON(queryURL, function(data) {
-                //console.log(data);
+                console.log(data);
                 var places = data.response.groups[0].items;
                 for (var i = 0; i < places.length; i++) {
-                    //console.log(places[i].venue);
                     var location = createLocation(places[i].venue);
-                    //console.log(location);
                     location.addToMap(self.map);
                     self.locations.push(location);
                 }
@@ -119,15 +124,29 @@
         function createLocation(locationData) {
             var name = locationData.name;
             var category = locationData.categories[0].name;
-            var phoneNumber = locationData.contact.formattedPhone;
-            var info = '<div id="content">'+
-                '<div id="siteNotice">'+category+
-                '</div>'+
-                '<h1 id="firstHeading" class="firstHeading">' + name + '</h1>'+
-                '<div id="bodyContent">'+
-                '<p>' + phoneNumber + '</p>'+
-                '</div>'+
-                '</div>';
+
+            var info = '<div id="info-window">'+
+                '<h1 id="info-name">' + name + '</h1>'+
+                '<div id=info-category">' + category + '</div>'+
+                '<div id="info-body">';
+
+            if (locationData.location && locationData.location.formattedAddress) {
+                info += '<p>' + locationData.location.formattedAddress[0] + '<br>' +
+                    locationData.location.formattedAddress[1] + '<br>' +
+                    locationData.location.formattedAddress[2] +
+                    '</p>';
+            }
+
+            if (locationData.contact && locationData.contact.formattedPhone) {
+                info += '<p>' + locationData.contact.formattedPhone + '</p>';
+            }
+
+            if (locationData.hours && locationData.hours.status) {
+                info += '<p>' + locationData.hours.status + '</p>';
+            }
+
+            info += '</div></div>';
+
             var lat = locationData.location.lat;
             var lng = locationData.location.lng;
 
