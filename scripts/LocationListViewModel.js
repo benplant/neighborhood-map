@@ -9,6 +9,7 @@
         self.info = info;
         self.lat = lat;
         self.lng = lng;
+
         self.log = function() {
             console.log(self);
         };
@@ -21,11 +22,13 @@
                 title: self.title
             });
 
-            var infowindow = new google.maps.InfoWindow({ content: self.info});
-
             google.maps.event.addListener(self.marker, 'click', function() {
                 self.marker.map.panTo(self.marker.position);
-                infowindow.open(googleMap, self.marker);
+                console.log(googleMap.infoWindow);
+                console.log(self.info);
+                googleMap.infoWindow.setContent(self.info);
+                console.log(googleMap.infoWindow);
+                googleMap.infoWindow.open(googleMap, self.marker);
 
                 // Add a brief bounce animation
                 self.marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -73,7 +76,9 @@
                     // Disable Google controls/UI
                     disableDefaultUI: true
                 };
-                return new google.maps.Map(document.getElementById('map'), mapOptions);
+                var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+                map.infoWindow = new google.maps.InfoWindow();
+                return map;
             }
         }
 
@@ -169,7 +174,6 @@
 
         // Center and resize map when window resized
         window.addEventListener('resize', function() {
-            console.log('addEve ntListener - resize');
             self.map.setCenter(self.mapCenter);
             google.maps.event.trigger(map, "resize");
         });
