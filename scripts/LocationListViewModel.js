@@ -58,8 +58,10 @@
     var LocationListViewModel = function (locationModel) {
         var self = this;
 
-        var startingLat = 49.2739952;
-        var startingLng = -123.1403072;
+        //var startingLat = 49.2739952;
+        //var startingLng = -123.1403072;
+        var startingLat = 49.2802736;
+        var startingLng = -123.1237418;
 
         self.mapCenter = {lat: startingLat, lng: startingLng};
         self.map = initializeMap();
@@ -75,7 +77,7 @@
             } else {
                 var mapOptions = {
                     center: self.mapCenter,
-                    zoom: 14,
+                    zoom: 15,
                     // Disable Google controls/UI
                     disableDefaultUI: true
                 };
