@@ -30,6 +30,16 @@
 
             self.clicked = function() {
                 google.maps.event.trigger(self.marker, 'click');
+            };
+
+            self.hide = function() {
+                // https://developers.google.com/maps/documentation/javascript/examples/marker-remove
+                // Remove this marker from the map
+                self.marker.setMap(null);
+            };
+
+            self.show = function() {
+                self.marker.setMap(googleMap);
             }
         };
     };
@@ -162,10 +172,20 @@
         // Filter locations array based on search input
         self.filteredLocations = ko.computed(function () {
             if (!self.currentFilter()) {
+                // Show all location markers on map
+                ko.utils.arrayForEach(self.locations(), function(location) {
+                    location.show();
+                });
                 return self.locations();
             } else {
                 return ko.utils.arrayFilter(self.locations(), function(location) {
-                    return location.title.toLowerCase().indexOf(self.currentFilter().toLowerCase()) > -1;
+                    if (location.title.toLowerCase().indexOf(self.currentFilter().toLowerCase()) > -1) {
+                        location.show();
+                        return true;
+                    } else {
+                        location.hide();
+                        return false;
+                    }
                 });
             }
         });
@@ -177,6 +197,7 @@
         self.searchResultsClicked = function(location) {
             console.log(location);
             location.clicked();
+
         };
 
         // Center and resize map when window resized
