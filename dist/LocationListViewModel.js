@@ -9,6 +9,7 @@
         self.info = info;
         self.lat = lat;
         self.lng = lng;
+
         self.log = function() {
             console.log(self);
         };
@@ -16,98 +17,158 @@
         self.addToMap = function(googleMap) {
             // Create a marker
             self.marker = new google.maps.Marker({
-                position: new google.maps.LatLng(self.lat,self.lng),
+                position: {lat: self.lat, lng: self.lng},
                 map: googleMap,
                 title: self.title
             });
 
-            var infowindow = new google.maps.InfoWindow({ content: self.info});
-
             google.maps.event.addListener(self.marker, 'click', function() {
-                infowindow.open(googleMap, self.marker);
+                self.marker.map.panTo(self.marker.position);
+                googleMap.infoWindow.setContent(self.info);
+                console.log(googleMap.infoWindow);
+                googleMap.infoWindow.open(googleMap, self.marker);
+
+                // Pan map down to allow infoWindow to be visible on mobile
+                self.marker.map.panBy(0, -100);
+
+                // Add a brief bounce animation
+                self.marker.setAnimation(google.maps.Animation.BOUNCE);
+                window.setTimeout(function() {
+                    // Stop bounce animation
+                    self.marker.setAnimation(null);
+                }, 1440);
             });
+
+            self.clicked = function() {
+                google.maps.event.trigger(self.marker, 'click');
+            };
+
+            self.hide = function() {
+                // Remove this marker from the map
+                self.marker.setMap(null);
+            };
+
+            self.show = function() {
+                self.marker.setMap(googleMap);
+            }
         };
-
     };
-
-
 
     // The Location List ViewModel
     var LocationListViewModel = function (locationModel) {
         var self = this;
 
+        var startingLat = 49.2802736;
+        var startingLng = -123.1237418;
+
+        self.mapCenter = {lat: startingLat, lng: startingLng};
         self.map = initializeMap();
-
-        // Observable Array of Locations
         self.locations = ko.observableArray([]);
+        self.categories = ko.observableArray([]);
 
-        // Location Categories
-        self.categories = [
-            { categoryName: "Coffee Shops" },
-            { categoryName: "Restaurants" },
-            { categoryName: "Book Stores" },
-            { categoryName: "Parks" }
-        ];
+        self.isSearching = ko.observable(true);
+        self.shouldShowLocations = ko.observable(true);
 
-        self.selectedCategories = [
-            { categoryName: "Coffee Shops", isSelected: false },
-            { categoryName: "Restaurants", isSelected: false },
-            { categoryName: "Book Stores", isSelected: false },
-            { categoryName: "Parks", isSelected: false }
-        ];
+        self.isSearching.subscribe(function(isSearching) {
+            window.setTimeout(function() {
+                self.shouldShowLocations(isSearching);
+            }, 100);
+        });
+
+        self.toggleLocationsVisible = function() {
+            self.shouldShowLocations(!self.shouldShowLocations());
+        };
 
         function initializeMap() {
-            var mapOptions = {
-                center: {lat: 49.2739952, lng: -123.1403072},
-                zoom: 14
-            };
-            return new google.maps.Map(document.getElementById('map'), mapOptions);
+            // Uses global google variable
+            // If internet is not connected, google is not defined.
+            if (typeof google === 'undefined') {
+                console.log("No google variable");
+                return null;
+            } else {
+                var mapOptions = {
+                    center: self.mapCenter,
+                    zoom: 15,
+                    // Disable Google controls/UI
+                    disableDefaultUI: true
+                };
+                var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+                map.infoWindow = new google.maps.InfoWindow();
+                return map;
+            }
         }
 
-        // Load example data from FourSquare
-        function loadFourSquareData() {
+        function addCategory(name, pluralName) {
 
-            //var queryURL = 'https://api.foursquare.com/v2/venues/search?near="Vancouver, BC"?client_id=VKUTCSNJXF00HDNE5ZMBMPFU0SG3MDJUXVAUOGMJQKOOCJA1&client_secret=1SDCLMDOJEYT13I4S4TRGDADKZD3XE0VL0RH32J0MELJFAKQ';
-            var queryURL = 'https://api.foursquare.com/v2/venues/explore?ll=49.2739952,-123.1403072&limit=20&oauth_token=XWDKSEKZ0FTNFJMOJ1SA5MSSA1HZVCMPTTZ5DYJUX0YFI3K4&v=20150509';
+            // Check to see if this category already exists
+            var match = ko.utils.arrayFirst(self.categories(), function(item) {
+                return name === item.categoryName;
+            });
+
+            if (!match) {
+                // Add the new category
+                var category = { categoryName: name, pluralName: pluralName, isSelected: true };
+                self.categories.push(category);
+            }
+        }
+
+        // Load data from FourSquare
+        function loadFourSquareData() {
+            // Return the top interesting results from FourSquare
+            var queryURL = 'https://api.foursquare.com/v2/venues/explore?ll=' +
+                startingLat + ',' +
+                startingLng +
+                '&limit=30' +
+                '&oauth_token=XWDKSEKZ0FTNFJMOJ1SA5MSSA1HZVCMPTTZ5DYJUX0YFI3K4&v=20150509';
 
             $.getJSON(queryURL, function(data) {
-
+                console.log(data);
                 var places = data.response.groups[0].items;
                 for (var i = 0; i < places.length; i++) {
-                    console.log(places[i].venue);
                     var location = createLocation(places[i].venue);
-                    console.log(location);
                     location.addToMap(self.map);
                     self.locations.push(location);
                 }
+            }).fail(function() {
+                console.log("Unable to complete FourSquare request");
             });
         }
 
         function createLocation(locationData) {
             var name = locationData.name;
             var category = locationData.categories[0].name;
-            var info = '<div id="content">'+
-                '<div id="siteNotice">'+category+
-                '</div>'+
-                '<h1 id="firstHeading" class="firstHeading">' + name + '</h1>'+
-                '<div id="bodyContent">'+
-                '<p>other stuff</p>'+
-                '</div>'+
-                '</div>';
+
+            var info = '<div id="info-window">'+
+                '<h1 id="info-name">' + name + '</h1>'+
+                '<div id=info-category">' + category + '</div>'+
+                '<div id="info-body">';
+
+            if (locationData.location && locationData.location.formattedAddress) {
+                info += '<p>' + locationData.location.formattedAddress[0] + '<br>' +
+                    locationData.location.formattedAddress[1] + '<br>' +
+                    locationData.location.formattedAddress[2] +
+                    '</p>';
+            }
+
+            if (locationData.contact && locationData.contact.formattedPhone) {
+                info += '<p>' + locationData.contact.formattedPhone + '</p>';
+            }
+
+            if (locationData.hours && locationData.hours.status) {
+                info += '<p>' + locationData.hours.status + '</p>';
+            }
+
+            info += '</div></div>';
+
             var lat = locationData.location.lat;
             var lng = locationData.location.lng;
+
+            addCategory(locationData.categories[0].name, locationData.categories[0].pluralName);
 
             return new Location(name, category, info, lat, lng);
         }
 
         loadFourSquareData();
-
-        // Array of passed in locations -- mapped to an observableArray of Location objects
-        //self.locations = ko.observableArray(locationModel.locations.map(function (location) {
-        //    return new Location(location.title, location.lat, location.lng);
-        //}));
-
-        console.log("Mapped locations: " + self.locations());
 
         // Store the current search filter entered by the user
         self.currentFilter = ko.observable();
@@ -115,10 +176,21 @@
         // Filter locations array based on search input
         self.filteredLocations = ko.computed(function () {
             if (!self.currentFilter()) {
+                // Show all location markers on map
+                ko.utils.arrayForEach(self.locations(), function(location) {
+                    location.show();
+                });
                 return self.locations();
             } else {
+                // Show filtered locations on map & hide others
                 return ko.utils.arrayFilter(self.locations(), function(location) {
-                    return location.title.indexOf(self.currentFilter()) > -1;
+                    if (location.title.toLowerCase().indexOf(self.currentFilter().toLowerCase()) > -1) {
+                        location.show();
+                        return true;
+                    } else {
+                        location.hide();
+                        return false;
+                    }
                 });
             }
         });
@@ -127,102 +199,19 @@
             self.currentFilter();
         };
 
-        // Console Log the JSON form of the ViewModel
-        //console.log(ko.toJSON(self));
+        self.searchResultsClicked = function(location) {
+            console.log(location);
+            location.clicked();
+        };
 
-
-
+        // Center and resize map when window resized
+        window.addEventListener('resize', function() {
+            self.map.setCenter(self.mapCenter);
+            google.maps.event.trigger(map, "resize");
+        });
     };
-
-
-
-
-
 
     // Bind an instance of our viewModel to the page
     var viewModel = new LocationListViewModel();
     ko.applyBindings(viewModel);
 }());
-
-
-//var queryYelp = function() {
-//
-//    var queryURL = "http://api.yelp.com/v2/search?location=Vancouver, BC&cc=CA&category_filter=gluten_free";
-//
-//
-//
-//    //$.getJSON(queryURL, function( data ) {
-//
-//
-//
-//    var auth = {
-//        consumerKey: "nfcsACjrebEVCPG64xgyXQ",
-//        consumerSecret: "Q9GiWQ6dAEv3eR2d02Hn6D_5Hyc",
-//        accessToken: "V2Sb2E5N8urFb0apHO2_XkFG20xvbLWb",
-//        // You wouldn't actually want to expose your access token secret like this in a real application.
-//        accessTokenSecret: "us5uLE1OJFKyGYzxstTPD4OpRuA",
-//        serviceProvider: {
-//            signatureMethod: "HMAC-SHA1"
-//        }
-//    };
-//
-//    var terms = 'food';
-//    var near = 'Vancouver, BC';
-//
-//    var accessor = {
-//        consumerSecret: auth.consumerSecret,
-//        tokenSecret: auth.accessTokenSecret
-//    };
-//
-//    parameters = [];
-//    parameters.push(['term', terms]);
-//    parameters.push(['location', near]);
-//    parameters.push(['callback', 'cb']);
-//    parameters.push(['oauth_consumer_key', auth.consumerKey]);
-//    parameters.push(['oauth_consumer_secret', auth.consumerSecret]);
-//    parameters.push(['oauth_token', auth.accessToken]);
-//    parameters.push(['oauth_signature_method', 'HMAC-SHA1']);
-//
-//    var message = {
-//        'action': 'http://api.yelp.com/v2/search',
-//        'method': 'GET',
-//        'parameters': parameters
-//    };
-//
-//    OAuth.setTimestampAndNonce(message);
-//    OAuth.SignatureMethod.sign(message, accessor);
-//
-//    var parameterMap = OAuth.getParameterMap(message.parameters);
-//    parameterMap.oauth_signature = OAuth.percentEncode(parameterMap.oauth_signature)
-//    console.log(parameterMap);
-//
-//    var bestRestaurant = "Some random restaurant";
-//
-//    $.ajax({
-//        'url': message.action,
-//        'data': parameterMap,
-//        'cache': true,
-//        'dataType': 'jsonp',
-//        'jsonpCallback': 'cb',
-//        'success': function (data, textStats, XMLHttpRequest) {
-//            console.log(data);
-//            var output = prettyPrint(data);
-//
-//            document.write("<h1>The 3 best restaurants are listed for the following city: </h1>");
-//            document.write("<h1>");
-//            document.write(near);
-//            document.write("<\h1>");
-//            var i;
-//            for (i = 0; i <= 10; i = i + 1) {
-//                document.write("<p>");
-//                document.write(data.businesses[i].name);
-//                document.write("   Rated   ");
-//                document.write(data.businesses[i].rating);
-//                document.write("      ");
-//                document.write(data.businesses[i].phone);
-//                document.write("<\p>");
-//            }
-//
-//        }
-//    });
-//};

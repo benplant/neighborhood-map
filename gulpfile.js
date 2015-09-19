@@ -5,7 +5,6 @@ var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var jshint = require('gulp-jshint');
 var del = require('del');
-d
 var DEST = 'dist/';
 
 // Clean all files out of the dist folder

@@ -3,7 +3,7 @@ neighborhood-map
 
 This is my version of a JavaScript Neighborhood Map for Project 5 of the [Udacity Front-End Web Developer Nanodegree] (https://www.udacity.com/course/nd001).
 
-This project provided experience with ...
+This project provided experience with using design patterns to assist in developing a manageable codebase, utilizing frameworks to decrease the time required to develop an application, and implementing third-party APIs to enhance an application.
 
 **Associated Udacity courses include:**
 
@@ -22,10 +22,6 @@ This project provided experience with ...
 * Learn how to use design patterns to assist in developing a manageable codebase.
 * Learn how to implement third-party API/'s valuable data sets to improve the quality of your application.
 
-**Bonus:**
-
-* ...
-* ...
 
 ###Viewing the Map:
 
@@ -35,13 +31,12 @@ To view the map, clone it from my github account:
 git clone https://github.com/benplant/neighborhood-map.git
 ```
 
-and then open index.html in your browser.
+and then open index.html in your browser.  It is not necessary to use the Gulp minified version of the application.
 
 ###Results:
 
 * I went with [Gulp](http://gulpjs.com/) for the build system on this project.  I have used [Grunt](http://gruntjs.com/) on other projects and wanted to diversify my experience.
-* ...
-* ...
+* I used [KnockoutJS](http://knockoutjs.com/) to develop a simple and manageable code base.
 
 ###Resources Used:
 
@@ -60,6 +55,7 @@ and then open index.html in your browser.
 * [Gulp Delete](https://github.com/gulpjs/gulp/blob/master/docs/recipes/delete-files-folder.md) -- Delete files/folders with Gulp.
 * [Gulp Util](https://github.com/gulpjs/gulp-util) -- Utilities for gulp plugins.
 * [Gulp JSHint](https://www.npmjs.com/package/gulp-jshint) -- JSHint plugin for gulp
+* [gulp-uglify](https://www.npmjs.com/package/gulp-uglify/) -- Minify files with UglifyJS and Gulp.
 * [To Do MVC Examples - Including KnockoutJS](http://todomvc.com/)
 * [Udacity Style Guide](http://udacity.github.io/frontend-nanodegree-styleguide/javascript.html)
 * [Have Google Map div take 100% of viewport](http://www.tutorialrepublic.com/faq/how-to-set-a-div-height-to-100-percent-using-css.php)
@@ -70,7 +66,6 @@ and then open index.html in your browser.
 **Researched, but did not use**
 
 * [gulp-concat](https://www.npmjs.com/package/gulp-concat) -- Concatenates files with Gulp.
-* [gulp-uglify](https://www.npmjs.com/package/gulp-uglify/) -- Minify files with UglifyJS and Gulp.
 * [RequireJS](http://requirejs.org/) -- JavaScript file and module loader.
 * [Gulp Source Maps](https://www.npmjs.com/package/gulp-sourcemaps) -- Source map support for Gulp.js.
 * [vinyl-source-stream](https://github.com/hughsk/vinyl-source-stream) -- Use conventional text streams at the start of your gulp pipeline.
