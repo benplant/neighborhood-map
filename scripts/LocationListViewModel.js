@@ -68,6 +68,19 @@
         self.locations = ko.observableArray([]);
         self.categories = ko.observableArray([]);
 
+        self.isSearching = ko.observable(true);
+        self.shouldShowLocations = ko.observable(true);
+
+        self.isSearching.subscribe(function(isSearching) {
+            window.setTimeout(function() {
+                self.shouldShowLocations(isSearching);
+            }, 100);
+        });
+
+        self.toggleLocationsVisible = function() {
+            self.shouldShowLocations(!self.shouldShowLocations());
+        };
+
         function initializeMap() {
             // Uses global google variable
             // If internet is not connected, google is not defined.
