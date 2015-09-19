@@ -6,20 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Neighbourhood Map</title>
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="bower_components/toastr/toastr.css"/>
     <link rel="stylesheet" href="styles/style.css">
 </head>
-
-<!-- Need to have:
-- search bar
-- list view of locations
-- google map that user's can interact with
-- markers for your favorite places
-- search bar should filter your list
-- (search should filter the list view & markers on the map)
-- clicking on the list view - shows the marker on the map & info box pop up for the location
-- click on marker -- little animation and info box...
--->
-
 
 <body>
     <div id="map"></div>
@@ -28,7 +17,7 @@
 
     <div id="search-results" data-bind="visible: shouldShowLocations">
         <div id="search-results-title"><h4>Locations</h4></div>
-        <h4 id="search-results-error" data-bind="visible: filteredLocations().length < 1">No Locations Available</h4>
+        <h4 id="search-results-error" data-bind="visible: filteredLocations().length < 1">No Locations Found</h4>
         <ul id="search-results-list" data-bind="foreach: filteredLocations, visible: locations().length">
             <li class="search-result-item" data-bind="click: $root.searchResultsClicked">
                 <p class="search-result-item-title" data-bind="text: title"></p>
@@ -40,12 +29,11 @@
     <!--script src='scripts/bundle.js'></script -->
     <script src='bower_components/jquery/dist/jquery.js'></script>
     <script src='bower_components/bootstrap/dist/js/bootstrap.js'></script>
+    <script src="bower_components/toastr/toastr.js"></script>
     <script src='bower_components/knockout/dist/knockout.js'></script>
     <script type="text/javascript"
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgZ0_B60S4G1rwoiN2FbDVFiBwaLLrOx4">
     </script>
-
     <script src='scripts/LocationListViewModel.js'></script>
-
 </body>
 </html>

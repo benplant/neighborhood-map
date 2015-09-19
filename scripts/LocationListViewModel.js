@@ -25,7 +25,6 @@
             google.maps.event.addListener(self.marker, 'click', function() {
                 self.marker.map.panTo(self.marker.position);
                 googleMap.infoWindow.setContent(self.info);
-                console.log(googleMap.infoWindow);
                 googleMap.infoWindow.open(googleMap, self.marker);
 
                 // Pan map down to allow infoWindow to be visible on mobile
@@ -72,7 +71,7 @@
         self.isSearching.subscribe(function(isSearching) {
             window.setTimeout(function() {
                 self.shouldShowLocations(isSearching);
-            }, 100);
+            }, 200);
         });
 
         self.toggleLocationsVisible = function() {
@@ -83,12 +82,14 @@
             // Uses global google variable
             // If internet is not connected, google is not defined.
             if (typeof google === 'undefined') {
-                console.log("No google variable");
+                var errorMessage = "Unable to connect to Google maps";
+                console.log(errorMessage);
+                toastr.error(errorMessage);
                 return null;
             } else {
                 var mapOptions = {
                     center: self.mapCenter,
-                    zoom: 15,
+                    zoom: 16,
                     // Disable Google controls/UI
                     disableDefaultUI: true
                 };
@@ -122,7 +123,6 @@
                 '&oauth_token=XWDKSEKZ0FTNFJMOJ1SA5MSSA1HZVCMPTTZ5DYJUX0YFI3K4&v=20150509';
 
             $.getJSON(queryURL, function(data) {
-                console.log(data);
                 var places = data.response.groups[0].items;
                 for (var i = 0; i < places.length; i++) {
                     var location = createLocation(places[i].venue);
@@ -130,7 +130,10 @@
                     self.locations.push(location);
                 }
             }).fail(function() {
-                console.log("Unable to complete FourSquare request");
+                self.locations([]);
+                var errorMessage = "Unable to complete FourSquare request";
+                console.log(errorMessage);
+                toastr.error(errorMessage);
             });
         }
 
@@ -200,7 +203,6 @@
         };
 
         self.searchResultsClicked = function(location) {
-            console.log(location);
             location.clicked();
         };
 
