@@ -24,11 +24,12 @@
 
             google.maps.event.addListener(self.marker, 'click', function() {
                 self.marker.map.panTo(self.marker.position);
-                console.log(googleMap.infoWindow);
-                console.log(self.info);
                 googleMap.infoWindow.setContent(self.info);
                 console.log(googleMap.infoWindow);
                 googleMap.infoWindow.open(googleMap, self.marker);
+
+                // Pan map down to allow infoWindow to be visible on mobile
+                self.marker.map.panBy(0, -100);
 
                 // Add a brief bounce animation
                 self.marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -44,7 +45,6 @@
 
             self.hide = function() {
                 // Remove this marker from the map
-                // https://developers.google.com/maps/documentation/javascript/examples/marker-remove
                 self.marker.setMap(null);
             };
 
@@ -58,8 +58,6 @@
     var LocationListViewModel = function (locationModel) {
         var self = this;
 
-        //var startingLat = 49.2739952;
-        //var startingLng = -123.1403072;
         var startingLat = 49.2802736;
         var startingLng = -123.1237418;
 
