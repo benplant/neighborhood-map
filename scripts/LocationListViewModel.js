@@ -49,7 +49,7 @@
 
             self.show = function() {
                 self.marker.setMap(googleMap);
-            }
+            };
         };
     };
 
