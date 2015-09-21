@@ -61,7 +61,10 @@ and then open index.html in your browser.  It is not necessary to use the Gulp m
 * [Have Google Map div take 100% of viewport](http://www.tutorialrepublic.com/faq/how-to-set-a-div-height-to-100-percent-using-css.php)
 * [Add/Remove Google Markers](https://developers.google.com/maps/documentation/javascript/examples/marker-remove)
 * [Animate Google Markers](https://developers.google.com/maps/documentation/javascript/examples/marker-animations-iteration)
-* [Toastr for Error Notifications](https://github.com/CodeSeven/toastr)
+* [jQuery](https://jquery.com/) -- JavaScript library, used to simplify Foursquare JSON request.
+* [Bower](http://bower.io/) -- Package manager, used to install JavaScript dependencies.
+* [Bootstrap](http://getbootstrap.com/) -- Used for responsive styling.
+* [Toastr](https://github.com/CodeSeven/toastr) -- Used for Error Notifications.
 * HTML & CSS, JavaScript & JQuery books by Jon Duckett
 
 **Researched, but did not use**
