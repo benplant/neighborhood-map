@@ -4,6 +4,7 @@
     // Represent a single location
     var Location = function (title, category, info, lat, lng) {
         var self = this;
+
         self.title = title;
         self.category = category;
         self.info = info;
@@ -14,23 +15,28 @@
             console.log(self);
         };
 
+        // Function to add this location to a given google map.
         self.addToMap = function(googleMap) {
-            // Create a marker
+            // Create a marker and add to the google map.
             self.marker = new google.maps.Marker({
                 position: {lat: self.lat, lng: self.lng},
                 map: googleMap,
                 title: self.title
             });
 
+            // Add a click listener to this marker
             google.maps.event.addListener(self.marker, 'click', function() {
+                // Pan the map to the marker's position.
                 self.marker.map.panTo(self.marker.position);
+
+                // Fill the infoWindow with content and open it.
                 googleMap.infoWindow.setContent(self.info);
                 googleMap.infoWindow.open(googleMap, self.marker);
 
                 // Pan map down to allow infoWindow to be visible on mobile
                 self.marker.map.panBy(0, -100);
 
-                // Add a brief bounce animation
+                // Add a brief bounce animation to the marker.
                 self.marker.setAnimation(google.maps.Animation.BOUNCE);
                 window.setTimeout(function() {
                     // Stop bounce animation
@@ -39,45 +45,54 @@
             });
 
             self.clicked = function() {
+                // Trigger a click on the marker on google maps.
                 google.maps.event.trigger(self.marker, 'click');
             };
 
             self.hide = function() {
-                // Remove this marker from the map
+                // Remove this marker from the map.
                 self.marker.setMap(null);
             };
 
             self.show = function() {
+                // Show this marker on the map.
                 self.marker.setMap(googleMap);
             };
         };
     };
 
-    // The Location List ViewModel
-    var LocationListViewModel = function (locationModel) {
+    // The ViewModel for our list of locations
+    var LocationListViewModel = function() {
         var self = this;
 
+        // Lat & Lng coordinates for center of map.
         var startingLat = 49.2802736;
         var startingLng = -123.1237418;
 
         self.mapCenter = {lat: startingLat, lng: startingLng};
         self.map = initializeMap();
+
+        // Observed arrays of locations and categories.
         self.locations = ko.observableArray([]);
         self.categories = ko.observableArray([]);
 
+        // Observed search filter entered by the user.
+        self.currentFilter = ko.observable();
+
+        // Observed status for searching and showing filtered list.
         self.isSearching = ko.observable(true);
         self.shouldShowLocations = ko.observable(true);
 
+
+        // If the user is searching/filtering locations, show the filtered list.
+        // If the search bar loses focus, hide the list.
         self.isSearching.subscribe(function(isSearching) {
             window.setTimeout(function() {
                 self.shouldShowLocations(isSearching);
             }, 200);
         });
 
-        self.toggleLocationsVisible = function() {
-            self.shouldShowLocations(!self.shouldShowLocations());
-        };
-
+        // Set up the google map.
         function initializeMap() {
             // Uses global google variable
             // If internet is not connected, google is not defined.
@@ -99,8 +114,9 @@
             }
         }
 
+        // Create a unique set of categories.
+        // Currently unused, but would allow for filtering by category.
         function addCategory(name, pluralName) {
-
             // Check to see if this category already exists
             var match = ko.utils.arrayFirst(self.categories(), function(item) {
                 return name === item.categoryName;
@@ -137,15 +153,18 @@
             });
         }
 
+        // Create a new location from returned FourSquare venue location data.
         function createLocation(locationData) {
             var name = locationData.name;
             var category = locationData.categories[0].name;
 
+            // Content for this locations infoWindow.
             var info = '<div id="info-window">'+
                 '<h1 id="info-name">' + name + '</h1>'+
                 '<div id=info-category">' + category + '</div>'+
                 '<div id="info-body">';
 
+            // Add an address if it is available.
             if (locationData.location && locationData.location.formattedAddress) {
                 info += '<p>' + locationData.location.formattedAddress[0] + '<br>' +
                     locationData.location.formattedAddress[1] + '<br>' +
@@ -153,10 +172,12 @@
                     '</p>';
             }
 
+            // Add a phone number if available.
             if (locationData.contact && locationData.contact.formattedPhone) {
                 info += '<p>' + locationData.contact.formattedPhone + '</p>';
             }
 
+            // Add the open status if available.
             if (locationData.hours && locationData.hours.status) {
                 info += '<p>' + locationData.hours.status + '</p>';
             }
@@ -166,6 +187,7 @@
             var lat = locationData.location.lat;
             var lng = locationData.location.lng;
 
+            // Add this category to the unique set of categories
             addCategory(locationData.categories[0].name, locationData.categories[0].pluralName);
 
             return new Location(name, category, info, lat, lng);
@@ -173,19 +195,17 @@
 
         loadFourSquareData();
 
-        // Store the current search filter entered by the user
-        self.currentFilter = ko.observable();
 
         // Filter locations array based on search input
         self.filteredLocations = ko.computed(function () {
             if (!self.currentFilter()) {
-                // Show all location markers on map
+                // If no filter applied, show ALL the locations on the map.
                 ko.utils.arrayForEach(self.locations(), function(location) {
                     location.show();
                 });
                 return self.locations();
             } else {
-                // Show filtered locations on map & hide others
+                // Show only the filtered locations on map & hide all others.
                 return ko.utils.arrayFilter(self.locations(), function(location) {
                     if (location.title.toLowerCase().indexOf(self.currentFilter().toLowerCase()) > -1) {
                         location.show();
@@ -198,10 +218,8 @@
             }
         });
 
-        self.filter = function() {
-            self.currentFilter();
-        };
-
+        // When a location in the list is clicked, pass that
+        // click through to the location.
         self.searchResultsClicked = function(location) {
             location.clicked();
         };
